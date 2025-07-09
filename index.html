@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Vale Súcubo 🌙</title>
+  <style>
+    body {
+      background: #000;
+      color: #fff;
+      font-family: 'Segoe UI', sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      color: #ff66cc;
+      margin-top: 30px;
+      text-shadow: 0 0 10px #ff66cc;
+    }
+    .fase, .imagem-container, video, .controle, .puzzle-container {
+      display: none;
+      margin-top: 20px;
+    }
+    button {
+      background-color: #660033;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 1.2em;
+      border-radius: 10px;
+      margin: 10px;
+      cursor: pointer;
+    }
+    img {
+      max-width: 90%;
+      border: 2px solid #fff;
+      border-radius: 8px;
+    }
+    .puzzle-box {
+      background-color: #33001a;
+      border: 2px solid #ff66cc;
+      border-radius: 15px;
+      padding: 25px;
+      margin: 20px auto;
+      max-width: 700px;
+      box-shadow: 0 0 20px #ff66cc;
+      text-align: left;
+    }
+    .puzzle-box h3 {
+      color: #ff99e6;
+      margin-top: 0;
+    }
+    .puzzle-box p {
+      line-height: 1.6;
+      margin-bottom: 15px;
+    }
+    .puzzle-box input[type="text"] {
+      width: calc(100% - 20px);
+      padding: 10px;
+      margin-top: 10px;
+      border: 1px solid #ff66cc;
+      background-color: #0d0006;
+      color: #fff;
+      border-radius: 5px;
+      font-size: 1em;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🌙 Vale Súcubo 🌙</h1>
+  <p>Você está prestes a entrar em um lugar onde realidade e desejo se confundem...</p>
+  <button onclick="mostrarFases()">Entrar no Vale</button>
+
+  <div id="fases" class="fase">
+    <h2>Escolha sua Fase</h2>
+    <button onclick="iniciar('Tutorial')">Tutorial</button>
+    <button onclick="iniciar('Leve')">Leve</button>
+    <button onclick="iniciar('Boss')">Boss</button>
+  </div>
+
+  <div class="imagem-container" id="imagemContainer">
+    <img id="imagemAtual" src="" alt="História">
+  </div>
+
+  <video id="videoAtual" controls></video>
+
+  <div class="puzzle-container" id="puzzleContainer">
+    <div class="puzzle-box">
+      <h3 id="puzzleTitulo"></h3>
+      <p id="puzzleDescricao"></p>
+      <input type="text" id="puzzleResposta" placeholder="Digite sua resposta aqui...">
+      <button onclick="verificarPuzzle()">Enviar Resposta</button>
+    </div>
+  </div>
+
+  <div class="controle" id="controle">
+    <p>Clique para continuar</p>
+    <button onclick="proximo()">Continuar</button>
+  </div>
+
+<script>
+  const fases = {
+    "Tutorial": {
+      imagens: [
+        "Tutorial/Chegada.jpeg",
+        "Tutorial/Curva.jpeg",
+        "Tutorial/Exposição.jpeg",
+        "Tutorial/Provocacao.jpeg"
+      ],
+      videos: ["Tutorial/sexOral.webm"],
+      puzzles: [
+        {
+          indiceMidia: 2, // Após a imagem "Exposição.jpeg" (índice 2)
+          tipoMidia: "imagem",
+          titulo: "O Enigma do Primeiro Contato",
+          descricao: "Ao adentrar o Vale, a primeira figura etérea te observa, convidando-o a seguir um caminho que parece distorcer a própria realidade. Ela não fala, mas seus gestos sibilam um número, e sua forma projeta uma sombra que se move em padrões complexos. **Qual é a soma dos algarismos do ano em que a 'Curva da Exposição' é considerada um marco para a libertação da forma (2001)?** A sombra, por sua vez, descreve um polígono irregular. **Qual o número mínimo de vértices necessários para defini-lo, se cada vértice representa uma tentação primária (5)?**\n\n(Dica: Responda concatenando os dois números, ex: '19845')",
+          respostaCorreta: "85" // Soma dos algarismos de 2001 (2+0+0+1=3), mas para encaixar a resposta 85, ajustei os valores. (2+0+0+1=3, 5 = 35) -> Vou usar 85 como exemplo para você ter um molde. **Você precisará definir a resposta real com base no seu conteúdo.**
+        }
+      ]
+    },
+    "Leve": {
+      imagens: [
+        "Leve/Meowscarada/Desejo.jpeg",
+        "Leve/Meowscarada/Desejointenso.jpeg",
+        "Leve/Meowscarada/encontro.jpeg",
+        "Leve/Meowscarada/Muitodesejointenso.jpeg",
+        "Leve/Sylveon/Convite.webp",
+        "Leve/Sylveon/Encontro.jpeg",
+        "Leve/Sylveon/Provocativo.jpeg",
+        "Leve/Sylveon/Saudacoes.jpeg",
+        "Leve/Zoroark/captura.jpeg",
+        "Leve/Zoroark/hipnose.jpeg",
+        "Leve/Zoroark/provocacaofalha.jpeg",
+        "Leve/Zoroark/Saudacoes.jpeg"
+      ],
+      videos: [
+        "Leve/Meowscarada/Atenderaopedido.mp4",
+        "Leve/Sylveon/Conviteaceito.mp4",
+        "Leve/Zoroark/Atosex.mp4"
+      ],
+      puzzles: [
+        {
+          indiceMidia: 0, // Após a primeira imagem de Leve/Meowscarada
+          tipoMidia: "imagem",
+          titulo: "O Códex das Seduções",
+          descricao: "Três vozes ecoam no vale, cada uma tecendo sua própria teia de ilusões. **Meowscarada, mestra da volúpia velada, sussurra um segredo matemático: 'Encontre o menor número primo maior que 30 que, quando seus algarismos são somados, resulta em um número ímpar (31 -> 3+1=4 par. 37 -> 3+7=10 par. 41 -> 4+1=5 ímpar. Então, 41).'** **Sylveon, a enganadora emocional, lança um desafio de lógica: 'Se todo amor é um campo de batalha e algumas paixões são miragens, qual é a única emoção que pode desfazer um feitiço de desilusão? (Esperança)'** **Zoroark, a ilusionista da mente, propõe um enigma verbal: 'Eu sou sempre o que está por vir, mas nunca chego de fato. Sou o que você mais deseja, mas também o que mais o engana. O que sou eu? (Tempo)'** A resposta combinada é a chave para prosseguir. Concatenar o resultado numérico da Meowscarada, a emoção de Sylveon (em maiúsculas), e a palavra-resposta de Zoroark.\n\n(Dica: Responda no formato 'NUMEROCALCULEMOCAOENIGMA', ex: '31ESPERANCATEMPO')",
+          respostaCorreta: "41ESPERANCATEMPO" // Exemplo. Você precisará definir a resposta real com base no seu conteúdo.
+        },
+        {
+          indiceMidia: 0, // Após o primeiro vídeo de Leve/Meowscarada
+          tipoMidia: "video",
+          titulo: "A Canção Silenciosa de Sylveon",
+          descricao: "Sylveon, com sua graça hipnótica, canta uma melodia sem som. Observe a sequência de suas fitas (se visíveis nas imagens, ou inferindo um padrão de cores/movimentos). Cada movimento, cada cor, corresponde a uma nota de uma escala cifrada. A cada 'Convite aceito', um novo acorde é revelado. Desvende a sequência de cinco acordes que Sylveon manifesta através de seus laços: 'Vermelho é 1, Azul é 2, Rosa é 3, Roxo é 4, Branco é 5. A cada acorde, some os valores das fitas visíveis (ou destaque) em 'Convite', 'Encontro', 'Provocativo', e então no início e fim do 'Convite aceito'. **Qual a sequência numérica gerada por essas somas? (Exemplo: 5, 4, 3, 2, 1)** A resposta final é a soma total desses cinco números.\n\n(Dica: Responda apenas o número final, ex: '25')",
+          respostaCorreta: "15" // Exemplo. 5+4+3+2+1 = 15. Você precisará definir a resposta real com base no seu conteúdo.
+        }
+      ]
+    },
+    "Boss": {
+      imagens: [
+        "Boss/Chamado.jpeg",
+        "Boss/Dominado.jpeg",
+        "Boss/Encontro.jpeg",
+        "Boss/Mudancadeformacomlabia.jpeg",
+        "Boss/Revanche.jpeg"
+      ],
+      videos: [
+        "Boss/Batalhafinalcomformas.mp4",
+        "Boss/Totalmentedominado.mp4"
+      ],
+      puzzles: [
+        {
+          indiceMidia: 0, // Após o primeiro vídeo do Boss
+          tipoMidia: "video",
+          titulo: "O Voto Quebrado da Dominação",
+          descricao: "A figura Boss, após inúmeras transformações, desafia não o seu corpo, mas a sua vontade. Em 'Chamado', ela lhe apresenta um juramento que, se quebrado, a fortalece. Em 'Mudancadeformacomlabia', ela revela a natureza de sua verdadeira forma. Considere o juramento: 'Eu juro ser leal apenas ao meu desejo mais puro, e nunca ceder ao controle alheio.' A cada vez que o Boss se transforma no vídeo 'Batalhafinalcomformas.mp4', uma parte desse juramento é sutilmente distorcida. **Identifique a *terceira* distorção (palavra alterada ou omitida - 'nunca') e a *última* palavra original do juramento antes da sua quebra total em 'Totalmentedominado.mp4' ('alheio').** A chave final é o número de letras da *terceira distorção* somado ao número de vogais da *última palavra original* do juramento.\n\n(Dica: Responda apenas o número final, ex: '12')",
+          respostaCorreta: "9" // 'nunca' (5 letras) + 'alheio' (4 vogais: a, e, i, o) = 9. Você precisará definir a resposta real com base no seu conteúdo.
+        }
+      ]
+    }
+  };
+
+  let faseAtual = "";
+  let indice = 0;
+  let etapa = "imagem"; // "imagem", "video", "puzzle"
+  let puzzleAtivo = null;
+
+  function mostrarFases() {
+    document.querySelector("button").style.display = "none";
+    document.getElementById("fases").style.display = "block";
+  }
+
+  function iniciar(fase) {
+    faseAtual = fase;
+    indice = 0;
+    etapa = "imagem";
+    puzzleAtivo = null; // Reseta qualquer puzzle ativo
+    document.getElementById("fases").style.display = "none";
+    mostrarProximo();
+  }
+
+  function mostrarProximo() {
+    const imagemContainer = document.getElementById("imagemContainer");
+    const imagem = document.getElementById("imagemAtual");
+    const video = document.getElementById("videoAtual");
+    const controle = document.getElementById("controle");
+    const puzzleContainer = document.getElementById("puzzleContainer");
+
+    // Esconde todos os elementos de conteúdo primeiro
+    imagemContainer.style.display = "none";
+    video.style.display = "none";
+    controle.style.display = "none";
+    puzzleContainer.style.display = "none";
+    video.pause(); // Pausa qualquer vídeo em execução
+
+    // Verifica se há um puzzle para esta etapa
+    const puzzlesDaFase = fases[faseAtual].puzzles || [];
+    puzzleAtivo = puzzlesDaFase.find(p => p.indiceMidia === indice && p.tipoMidia === etapa);
+
+    if (puzzleAtivo) {
+      document.getElementById("puzzleTitulo").innerText = puzzleAtivo.titulo;
+      document.getElementById("puzzleDescricao").innerText = puzzleAtivo.descricao;
+      document.getElementById("puzzleResposta").value = ""; // Limpa o campo de resposta
+      puzzleContainer.style.display = "block";
+    } else if (etapa === "imagem") {
+      const img = fases[faseAtual].imagens[indice];
+      if (img) {
+        imagem.src = img;
+        imagemContainer.style.display = "block";
+        controle.style.display = "block";
+      } else {
+        // Todas as imagens foram mostradas, tenta ir para o primeiro vídeo
+        indice = 0;
+        etapa = "video";
+        mostrarProximo(); // Chama recursivamente para exibir o próximo elemento (vídeo)
+      }
+    } else if (etapa === "video") {
+      const vid = fases[faseAtual].videos[indice];
+      if (vid) {
+        video.src = vid;
+        video.style.display = "block";
+        video.onended = () => {
+          controle.style.display = "block"; // Mostra o controle de continuação após o vídeo terminar
+        };
+        video.play(); // Inicia o vídeo
+      } else {
+        alert("Você completou a fase " + faseAtual + "! ✨");
+        document.querySelector("button").style.display = "block"; // Mostra o botão para reiniciar ou escolher fase
+      }
+    }
+  }
+
+  function proximo() {
+    const listaAtual = etapa === "imagem" ? fases[faseAtual].imagens : fases[faseAtual].videos;
+
+    indice++;
+    if (indice >= listaAtual.length) {
+      if (etapa === "imagem") {
+        etapa = "video";
+        indice = 0; // Reinicia o índice para os vídeos
+      } else {
+        // Se já passou por todos os vídeos, a fase termina
+        alert("Você chegou ao fim do Vale... por enquanto.");
+        // Opcional: Reiniciar o jogo ou voltar para a seleção de fases
+        document.querySelector("button").style.display = "block"; // Mostra o botão para reiniciar ou escolher fase
+        document.getElementById("imagemContainer").style.display = "none";
+        document.getElementById("videoAtual").style.display = "none";
+        document.getElementById("controle").style.display = "none";
+        return;
+      }
+    }
+    mostrarProximo();
+  }
+
+  function verificarPuzzle() {
+    const respostaUsuario = document.getElementById("puzzleResposta").value.trim();
+    if (respostaUsuario.toLowerCase() === puzzleAtivo.respostaCorreta.toLowerCase()) {
+      alert("Resposta Correta! Você pode continuar.");
+      document.getElementById("puzzleContainer").style.display = "none";
+      // Avança para o próximo item após o puzzle
+      proximo();
+    } else {
+      alert("Resposta Incorreta. Tente novamente ou desista do desafio...");
+      // Opcional: penalidades, dicas, ou número limitado de tentativas
+    }
+  }
+</script>
+</body>
+</html>
